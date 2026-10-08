@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package dem;
+
+// CanDrive TCP API contract.
+// Framing: uint32 big-endian length + protobuf payload.
+// See README.md and docs/PROTOCOL.md
+
+message CanDriveRequest {
+  double lat = 1;           // WGS84 degrees
+  double lon = 2;           // WGS84 degrees
+  double azimuth_deg = 3;  // 0 = north, clockwise (compass)
+  double distance_m = 4;   // forward distance to check, meters (e.g. 10)
+}
+
+// Key-value response. All values are strings.
+//
+// Keys always present:
+//   ok          — "0" or "1"
+//   grade_pct   — effective grade percent
+//   delta_h_m   — z_end - z_start, meters
+//   z_start_m   — elevation at vehicle center start, meters
+//   z_end_m     — elevation at vehicle center end, meters
+//   error       — empty on success, otherwise error text
+message CanDriveResponse {
+  map<string, string> data = 1;
+}
